@@ -24,12 +24,18 @@ class LineItemsController < ApplicationController
       render json: {error: 'Sorry, not enough stock.'}
     else
       # if yes,
-      # 1, find_or_create_by a new line_item
-      current_line_item = LineItem.find_or_create_by product_id: product_id,cart_id
-      # 2, add quantity to the line_item
-      # 3, send success message back to frontend
-    end
+      # 1, find_or_create_by a line_item
+      current_line_item = LineItem.find_or_create_by product_id: product_id, cart_id: cart_id
+      # 2, add quantity to the current_line_item
+      # no matter if it's a new line_item (default quantity is 0) or it's an existing line_item, add the wanted_quantity to the existing quantity
+      updated_line_item_quantity = current_line_item.quantity + wanted_quantity
 
+      # save the current_line_item updated quantity
+      current_line_item.update quantity: updated_line_item_quantity
+
+      # 3, send success message back to frontend
+      render json: current_line_item, include: :product
+    end
 
 
 
