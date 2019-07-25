@@ -16,20 +16,21 @@ class LineItemsController < ApplicationController
 
 
     ##################CONTINUE!!!!########################
-    # 1) double confirm in the DB, if the requested quantity of the product is <= stock
-    # if not, send error message back to front end
+    # 1, find or create a line_item by its cart_id and product_id,
+    # because one cart should only have one line_item for one product,
+    current_line_item = LineItem.find_or_create_by product_id: product_id, cart_id: cart_id
+
+    # 2, add wanted quantity to the ecurrent_line_item xisting quantity
+    # no matter if it's a new line_item (default quantity is 0) or it's an existing line_item, add the wanted_quantity to the existing quantity
+    updated_line_item_quantity = current_line_item.quantity + wanted_quantity
+
+    # 3, double confirm if the updated_line_item_quantity is <= stock
     product = Product.find(product_id)
 
-    if wanted_quantity > product.stock
-      render json: {error: 'Sorry, not enough stock.'}
+    if updated_line_item_quantity > product.stock
+      # if > stock, send error message back to front end
+      render json: {error: 'Sorry, not enough stock.'}, status:422
     else
-      # if yes,
-      # 1, find_or_create_by a line_item
-      current_line_item = LineItem.find_or_create_by product_id: product_id, cart_id: cart_id
-      # 2, add quantity to the current_line_item
-      # no matter if it's a new line_item (default quantity is 0) or it's an existing line_item, add the wanted_quantity to the existing quantity
-      updated_line_item_quantity = current_line_item.quantity + wanted_quantity
-
       # save the current_line_item updated quantity
       current_line_item.update quantity: updated_line_item_quantity
 
@@ -54,10 +55,40 @@ class LineItemsController < ApplicationController
   end
 
   def update
+    line_item = LineItem.find params[:id]
+    updated_line_item_quantity = params[:line_item][:quantity]
+    current_line_item_stock = line_item.product.stock
+
+    p '*****************************'
+    p 'this is the line_item:', line_item
+    p 'this is the updated_line_item_quantity:', updated_line_item_quantity
+    p 'line_item.product.stock', current_line_item_stock
+    p '*****************************'
+
+    # the updated_line_item_quantity is the total requested number of the product stored in the cart!
+    # double check directly if the updated_line_item_quantity <= stock
+    if updated_line_item_quantity <= current_line_item_stock
+      # update line_item's quantity to the updated_line_item_quantity
+      line_item.update quantity:updated_line_item_quantity
+      # render back the whole cart info including this line_item
+      render json: line_item.cart.line_items.order(created_at: :asc), include: :product
+    else
+      render json: {error: 'Sorry, not enough stock.'}, status:422
+    end
   end
 
+
+
   def destroy
+    line_item = LineItem.find params[:id]
+    p '*****************************'
+    p 'this is the line_item:', line_item
+    p '*****************************'
+    line_item.destroy
+
+    render json: current_user.cart.line_items.order(created_at: :asc), include: :product
   end
+
 
   private
 
@@ -65,7 +96,5 @@ class LineItemsController < ApplicationController
     params.require(:line_item).permit(:product_id, :quantity)
   end
 
-  def check_if_any_existing_line_item(product_id, user)
 
-  end
 end
