@@ -58,3 +58,5 @@ gem "pry-rails"
 gem 'knock'
 
 gem 'rack-cors', require: 'rack/cors'
+
+gem 'rails_12factor', group: :production
