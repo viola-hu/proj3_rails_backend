@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   resources :categories
 
-  resources :products, except: [:new, :index]
+  resources :products, except: [:new]
 
   resources :line_items, except: [:new, :edit, :index]
 

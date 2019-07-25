@@ -4,6 +4,11 @@ class ProductsController < ApplicationController
     render json: product, include: :category
   end
 
+  def index
+    render json: Product.all
+  end
+
+
   def create
   end
 
