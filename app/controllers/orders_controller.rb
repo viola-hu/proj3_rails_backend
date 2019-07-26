@@ -24,6 +24,16 @@ class OrdersController < ApplicationController
 
   end
 
+  def show
+
+    order = Order.find params[:id]
+    line_items = order.line_items
+    # an array of line_items of that order
+
+    render json: line_items, include: :product
+
+  end
+
 
 
 
