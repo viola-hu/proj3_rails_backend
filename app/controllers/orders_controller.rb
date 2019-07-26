@@ -20,7 +20,7 @@ class OrdersController < ApplicationController
     # 5) also, need to deduct the purchased quantity of the product from its existing number
     order.after_payment_change_product_stock
 
-    render json: current_line_items, include: :product
+    render json: order
 
   end
 
