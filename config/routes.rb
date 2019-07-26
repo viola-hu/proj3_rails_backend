@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  get 'carts/show'
+
   post 'user_token' => 'user_token#create'
 
   resources :users, except: [:new, :create, :index]
@@ -14,4 +14,5 @@ Rails.application.routes.draw do
 
   get '/cart' => 'carts#show'
 
+  get '/order'=> 'orders#create'
 end
