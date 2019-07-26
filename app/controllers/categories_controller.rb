@@ -4,9 +4,8 @@ class CategoriesController < ApplicationController
 
   def show
     category = Category.find params[:id]
-
+    
     render json: category.products.order(id: :asc)
-    # include this category's associated products
   end
 
   def create
