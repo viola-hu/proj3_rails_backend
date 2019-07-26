@@ -6,7 +6,7 @@ class Order < ApplicationRecord
   def after_payment_change_product_stock
     # deduct the purchased quantity of the line_item from its product's existing stock number
     self.line_items.each do |line_item|
-      line_item.product.decrement( :stock, line_item.quantity )
+      line_item.product.decrement!( :stock, line_item.quantity )
     end
   end
 
