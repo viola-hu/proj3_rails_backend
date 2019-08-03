@@ -60,3 +60,5 @@ gem 'knock'
 gem 'rack-cors', require: 'rack/cors'
 
 gem 'rails_12factor', group: :production
+
+gem 'stripe', '~> 2.1'
