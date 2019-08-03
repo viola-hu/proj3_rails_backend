@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   post 'user_token' => 'user_token#create'
 
   resources :users, except: [:new, :create, :index]
@@ -17,5 +17,5 @@ Rails.application.routes.draw do
 
   get '/order/:id' => 'orders#show'
 
-  get '/charge' => 'charges#create'
+  post '/charge' => 'charges#create'
 end
