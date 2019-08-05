@@ -16,8 +16,11 @@ class ChargesController < ApplicationController
     # need to safely store the api_key, instead of let them expose in this file!
     # https://blog.arkency.com/2017/07/how-to-safely-store-api-keys-in-rails-apps/
     # # test environment, Secret key
-    Stripe.api_key = 'sk_test_gmIUX1P9xjieMFubvMsTy21S00BSOhPUGl'
     # Publishable key: 'pk_test_dBB7Zc6zujggRBFHQUdShiJg00Ee8VeuNR'
+
+
+    Stripe.api_key = Rails.application.secrets.stripe_api_secret
+    # Stripe.api_key = 'sk_test_gmIUX1P9xjieMFubvMsTy21S00BSOhPUGl'
 
     # user_email = current_user.email
 
