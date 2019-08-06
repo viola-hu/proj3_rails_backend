@@ -18,4 +18,6 @@ Rails.application.routes.draw do
   get '/order/:id' => 'orders#show'
 
   post '/charge' => 'charges#create'
+
+  get '/search/:q' => 'products#search'
 end
