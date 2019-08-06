@@ -2,7 +2,9 @@ Rails.application.routes.draw do
 
   post 'user_token' => 'user_token#create'
 
-  resources :users, except: [:new, :create, :index]
+  resources :users, except: [:new, :create, :index, :show]
+
+  get '/user' => 'users#show'
   post '/signup' => 'users#create'
 
   resources :categories

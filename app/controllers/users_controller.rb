@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     if user.persisted?
       # if a user has been saved, create a cart for this user immediately
       cart = Cart.create({user_id: user.id})
-    
+
       render json:{success: true, cart: cart}
     else
       render json:{errors: user.errors.full_messages}, status: 422
@@ -16,6 +16,17 @@ class UsersController < ApplicationController
   end
 
   def show
+    if current_user.cart.line_items.length == 0
+      total_products_number_in_cart = 0
+    else
+      total_products_number_in_cart = current_user.cart.line_items.sum{|li| li.quantity}
+    end
+
+    render json:{
+      current_user_email: current_user.email,
+      current_user_name: current_user.name,
+      products_number: total_products_number_in_cart
+    }
   end
 
   def edit

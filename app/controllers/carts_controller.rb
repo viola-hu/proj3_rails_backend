@@ -13,5 +13,17 @@ class CartsController < ApplicationController
 
     render json: line_items, include: :product
 
+    # no need of user info
+    # render json: line_items, include: {
+    #   product:{},
+    #   cart: {
+    #     include:{
+    #       user:{
+    #         only: [:name, :email]
+    #       }
+    #     }
+    #   }
+    # }
+
   end
 end
