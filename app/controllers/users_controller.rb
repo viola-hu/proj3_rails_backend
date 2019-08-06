@@ -16,11 +16,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    if current_user.cart.line_items.length == 0
-      total_products_number_in_cart = 0
-    else
-      total_products_number_in_cart = current_user.cart.line_items.sum{|li| li.quantity}
-    end
+    total_products_number_in_cart = current_user.get_total_products_number_in_cart
 
     render json:{
       current_user_email: current_user.email,

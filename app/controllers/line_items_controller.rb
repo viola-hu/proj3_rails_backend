@@ -20,7 +20,7 @@ class LineItemsController < ApplicationController
     # because one cart should only have one line_item for one product,
     current_line_item = LineItem.find_or_create_by product_id: product_id, cart_id: cart_id
 
-    # 2, add wanted quantity to the ecurrent_line_item xisting quantity
+    # 2, add wanted quantity to the ecurrent_line_item existing quantity
     # no matter if it's a new line_item (default quantity is 0) or it's an existing line_item, add the wanted_quantity to the existing quantity
     updated_line_item_quantity = current_line_item.quantity + wanted_quantity
 
@@ -31,11 +31,18 @@ class LineItemsController < ApplicationController
       # if > stock, send error message back to front end
       render json: {error: 'Sorry, not enough stock.'}, status:422
     else
-      # save the current_line_item updated quantity
+      # 1) save the current_line_item updated quantity
       current_line_item.update quantity: updated_line_item_quantity
 
-      # 3, send success message back to frontend
-      render json: current_line_item, include: :product
+      # 2) get the current_user's total_products_number_in_cart
+      # render it back to update page top right corner shopping bag number
+      total_products_number_in_cart = current_user.get_total_products_number_in_cart
+
+      # 3) also send success message
+      render json: {
+        total_products_number_in_cart: total_products_number_in_cart,
+        added_to_cart: 'success'
+      }
     end
 
 
