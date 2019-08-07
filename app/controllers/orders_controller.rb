@@ -34,6 +34,22 @@ class OrdersController < ApplicationController
 
   end
 
+  def index
+    orders = current_user.orders # array of all current_user's orders
+
+    render json: orders,
+      methods:[:order_created_at_date_formatted, :order_total_amount],
+      include: {
+        line_items: {
+          include: {
+            product: {
+              only: [:name, :price, :image]
+            }
+          }
+        }
+      }
+  end
+
 
 
 

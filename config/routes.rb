@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   get '/order/:id' => 'orders#show'
 
+  get '/orders' => 'orders#index'
+
   post '/charge' => 'charges#create'
 
   get '/search/:q' => 'products#search'

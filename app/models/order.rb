@@ -10,4 +10,12 @@ class Order < ApplicationRecord
     end
   end
 
+  def order_created_at_date_formatted
+    self.created_at.strftime("%d %b %Y")
+  end
+
+  def order_total_amount
+    self.line_items.sum{|li| li.quantity * li.product.price}    
+  end
+
 end
