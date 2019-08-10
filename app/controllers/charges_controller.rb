@@ -36,6 +36,13 @@ class ChargesController < ApplicationController
     puts 'total_amount is', total_amount
     puts '******************'
 
+    # in case user clicked pay button multiple times,
+    # check beforehand if the cart line-items have been moved to order already?
+    # if yes, return directly, no need to call stripe to proceed
+    if total_amount == 0
+      return
+    end
+
     #************ so far working **********
 
     begin
