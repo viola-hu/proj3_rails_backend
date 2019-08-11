@@ -25,13 +25,20 @@ class OrdersController < ApplicationController
   end
 
   def show
+    # LEARNING:
+    # authenticate_user only checks if the request is from a login user, but doesn't check if the user is the owner of the requested order
+    # found a bug myself, when a login user send a request to /order/:id, of which the order id didn't belong to this user, however, authenticate_user only checks if the user sends through a token which means the user is logged in, but not quite check if this requested order information belongs to the user
+    # thus add one more check here!
 
-    order = Order.find params[:id]
-    line_items = order.line_items
-    # an array of line_items of that order
+    if current_user.orders.find_by id: params[:id]
+      order = Order.find params[:id]
+      line_items = order.line_items
+      # an array of line_items of that order
 
-    render json: line_items, include: :product
-
+      render json: line_items, include: :product
+    else
+      render json: {message: 'invalid request'}, status: 404
+    end
   end
 
   def index
